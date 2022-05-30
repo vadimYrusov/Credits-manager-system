@@ -13,6 +13,6 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Client getClient(Long id) {
-        return clientRepository.findById(id).get();
+        return clientRepository.getClientById(id);
     }
 }
