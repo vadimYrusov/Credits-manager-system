@@ -1,4 +1,4 @@
-package com.example.bank.controller;
+package com.example.bank.api.controller;
 
 import com.example.bank.entity.Client;
 import com.example.bank.service.ClientService;

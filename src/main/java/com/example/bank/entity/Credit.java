@@ -3,6 +3,8 @@ package com.example.bank.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,6 +22,7 @@ public class Credit {
 
     private String name;
 
-    @ManyToMany(mappedBy = "credits")
-    private Set<Client> clients;
+    private Long sum;
+
+    private int term;
 }
