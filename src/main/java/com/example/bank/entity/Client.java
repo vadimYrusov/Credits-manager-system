@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "client")
 @AllArgsConstructor
 @NoArgsConstructor

@@ -10,6 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "credit")
 @AllArgsConstructor
 @NoArgsConstructor
