@@ -1,4 +1,4 @@
-package com.example.bank.exeptions;
+package com.example.bank.api.exeptions;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;

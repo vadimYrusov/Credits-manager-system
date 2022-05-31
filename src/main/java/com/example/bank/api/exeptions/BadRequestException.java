@@ -1,4 +1,4 @@
-package com.example.bank.exeptions;
+package com.example.bank.api.exeptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

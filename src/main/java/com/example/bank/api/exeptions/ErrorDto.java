@@ -1,4 +1,4 @@
-package com.example.bank.exeptions;
+package com.example.bank.api.exeptions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
