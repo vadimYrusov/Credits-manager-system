@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 @RestController
 @RequiredArgsConstructor
 @Transactional
-@RequestMapping("/api")
+@RequestMapping("/api/client")
 public class ClientController {
 
     private final ClientRepository clientRepository;
@@ -28,8 +28,11 @@ public class ClientController {
     private final ClientDtoFactory clientDtoFactory;
 
     @GetMapping("/client/{id}")
-    public Client getClient(@PathVariable Long id) {
-        return clientRepository.getClientById(id);
+    public ClientDto getClient(@PathVariable Long id) {
+
+        Client client = getClientOrThrowException(id);
+
+        return clientDtoFactory.makeClientDto(client);
     }
 
     @GetMapping("/str")
@@ -44,7 +47,7 @@ public class ClientController {
 
         Stream<Client> clientStream = optionalPrefixName
                 .map(clientRepository::streamAllByNameStartsWithIgnoreCase)
-                .orElseGet(clientRepository::streamAll);
+                .orElseGet(clientRepository::streamAllBy);
 
         return clientStream
                 .map(clientDtoFactory::makeClientDto)
@@ -106,8 +109,41 @@ public class ClientController {
         return AnswerDto.makeDefault(true);
     }
 
+    @PutMapping("/update")
+    public ClientDto updateClient(
+            @RequestParam(value = "client_id", required = false) Optional<Long> optionalId,
+            @RequestParam(value = "client_name", required = false) Optional<String> optionalName
+    ) {
+
+        optionalName = optionalName.filter(clientName -> !clientName.trim().isEmpty());
+
+        boolean isCreate = !optionalId.isPresent();
+
+        Client client = optionalId
+                .map(this::getClientOrThrowException)
+                .orElseGet(() -> Client.builder().build());
+
+        if (isCreate && !optionalName.isPresent()) {
+            throw new BadRequestException("Client name can't be empty");
+        }
+
+        optionalName
+                .ifPresent(clientName -> {
+                    clientRepository
+                            .findByName(clientName)
+                            .filter(client1 -> !Objects.equals(client1.getId(), client.getId()))
+                            .ifPresent(client1 -> {
+                                throw new BadRequestException("Client with name " + clientName + " already exists");
+                            });
+                });
+
+        final Client saveClient = clientRepository.saveAndFlush(client);
+
+        return clientDtoFactory.makeClientDto(saveClient);
+    }
+
     private Client getClientOrThrowException(Long id) {
-        Client client = clientRepository
+        return clientRepository
                 .findById(id)
                 .orElseThrow(() ->
                         new NotFoundException("Client with id " + id + " doesn't exist")

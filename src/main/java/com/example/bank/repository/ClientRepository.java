@@ -13,7 +13,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findByName(String name);
 
-    Stream<Client> streamAll();
+    Stream<Client> streamAllBy();
 
     Stream<Client> streamAllByNameStartsWithIgnoreCase(String name);
 }
