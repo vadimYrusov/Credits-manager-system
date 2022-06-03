@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,4 +23,6 @@ public class ClientDto {
     private int age;
 
     private String email;
+
+    private List<CreditDto> credits = new ArrayList<>();
 }
