@@ -15,22 +15,50 @@ public class ClientDtoFactory {
 
     public ClientDto makeClientDto(Client client) {
 
+        if (client.getCredits().isEmpty()) {
+            return ClientDto.builder()
+                    .id(client.getId())
+                    .name(client.getName())
+                    .surname(client.getSurname())
+                    .age(client.getAge())
+                    .email(client.getEmail())
+                    .build();
+        }else {
+            return ClientDto.builder()
+                    .id(client.getId())
+                    .name(client.getName())
+                    .surname(client.getSurname())
+                    .age(client.getAge())
+                    .email(client.getEmail())
+                    .credits(
+                            client
+                                    .getCredits()
+                                    .stream()
+                                    .map(creditDtoFactory::makeCreditDto)
+                                    .collect(Collectors.toList())
+                    )
+                    .build();
+        }
+
+
+    }
+
+    public ClientDto makeClientDtoWithCredit(Client client) {
+
         return ClientDto.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .surname(client.getSurname())
                 .age(client.getAge())
                 .email(client.getEmail())
-//                .credits(
-//                        client
-//                                .getCredits()
-//                                .stream()
-//                                .map(creditDtoFactory::makeCreditDto)
-//                                .collect(Collectors.toList())
-//                )
+                .credits(
+                        client
+                                .getCredits()
+                                .stream()
+                                .map(creditDtoFactory::makeCreditDto)
+                                .collect(Collectors.toList())
+                )
                 .build();
     }
-
-
 
 }
