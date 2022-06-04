@@ -115,28 +115,46 @@ public class ClientController {
         return clientDtoFactory.makeClientDto(client1);
     }
 
+//    @PatchMapping("/edit/{client_id}")
+//    public ClientDto editClient(@PathVariable("client_id") Long id,
+//                                @RequestParam String name) {
+//
+//        if (name.trim().isEmpty()) {
+//            throw new BadRequestException("Name can't be empty");
+//        }
+//
+//        Client client = getClientOrThrowException(id);
+//
+//        clientRepository
+//                .findByName(name)
+//                .filter(client1 -> !Objects.equals(client1.getId(), id))
+//                .ifPresent(client1 -> {
+//                    throw new BadRequestException("Client " + name + " already exists");
+//                });
+//
+//        client.setName(name);
+//
+//        client = clientRepository.saveAndFlush(client);
+//
+//        return clientDtoFactory.makeClientDto(client);
+//    }
+
     @PatchMapping("/edit/{client_id}")
     public ClientDto editClient(@PathVariable("client_id") Long id,
-                                @RequestParam String name) {
+                                @RequestBody Client client) {
 
-        if (name.trim().isEmpty()) {
-            throw new BadRequestException("Name can't be empty");
-        }
 
-        Client client = getClientOrThrowException(id);
 
-        clientRepository
-                .findByName(name)
-                .filter(client1 -> !Objects.equals(client1.getId(), id))
-                .ifPresent(client1 -> {
-                    throw new BadRequestException("Client " + name + " already exists");
-                });
+        Client client1 = getClientOrThrowException(id);
 
-        client.setName(name);
+        client1.setName(client.getName());
+        client1.setSurname(client.getSurname());
+        client1.setAge(client.getAge());
+        client1.setEmail(client.getEmail());
 
-        client = clientRepository.saveAndFlush(client);
+        client1 = clientRepository.saveAndFlush(client1);
 
-        return clientDtoFactory.makeClientDto(client);
+        return clientDtoFactory.makeClientDto(client1);
     }
 
     @DeleteMapping("/delete/{client_id}")
@@ -194,7 +212,7 @@ public class ClientController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{client_id}/credit/{credit_id}")
+    @PutMapping("/{client_id}/credit/{credit_id}")
     public ClientDto addCreditToClient(@PathVariable("client_id") Long client_id,
                                        @PathVariable("credit_id") Long credit_id
     ) {

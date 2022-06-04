@@ -1,5 +1,6 @@
 package com.example.bank.api.controller;
 
+import com.example.bank.api.dto.AnswerDto;
 import com.example.bank.api.dto.ClientDto;
 import com.example.bank.api.dto.CreditDto;
 import com.example.bank.api.exeptions.BadRequestException;
@@ -41,7 +42,7 @@ public class CreditController {
     }
 
     @GetMapping("/credit/{id}")
-    public CreditDto getCredit(@PathVariable Long id) {
+    public CreditDto getCreditById(@PathVariable Long id) {
 
         Credit credit = getCreditOrThrowException(id);
 
@@ -68,6 +69,31 @@ public class CreditController {
         );
 
         return creditDtoFactory.makeCreditDto(credit1);
+    }
+
+    @PatchMapping("/edit/{credit_id}")
+    public CreditDto editCredit(@PathVariable("credit_id") Long id,
+                                @RequestBody Credit credit) {
+
+        Credit credit1 = getCreditOrThrowException(id);
+
+        credit1.setName(credit.getName());
+        credit1.setSum(credit.getSum());
+        credit1.setTerm(credit.getTerm());
+
+        credit1 = creditRepository.saveAndFlush(credit1);
+
+        return creditDtoFactory.makeCreditDto(credit1);
+    }
+
+    @DeleteMapping("/delete/{credit_id}")
+    public AnswerDto deleteCredit(@PathVariable("credit_id") Long id) {
+
+        Credit credit = getCreditOrThrowException(id);
+
+        creditRepository.deleteById(id);
+
+        return AnswerDto.makeDefault(true);
     }
 
     private Credit getCreditOrThrowException(Long id) {
