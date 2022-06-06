@@ -11,6 +11,8 @@ import com.example.bank.entity.Client;
 import com.example.bank.entity.Credit;
 import com.example.bank.repository.ClientRepository;
 import com.example.bank.repository.CreditRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Transactional
 @RequestMapping("/api/clients")
+@Tag(name = "Clients", description = "Operations with clients")
 public class ClientController {
 
     private final ClientRepository clientRepository;
@@ -50,6 +53,7 @@ public class ClientController {
 //                .collect(Collectors.toList());
 //    }
 
+    @Operation(summary = "All clients", description = "Get all clients")
     @GetMapping("/all")
     public List<ClientDto> getAllClients() {
 
@@ -60,6 +64,7 @@ public class ClientController {
                 clients.stream().map(clientDtoFactory::makeClientDto).collect(Collectors.toList());
     }
 
+    @Operation(summary = "Get client", description = "Get client by id")
     @GetMapping("/client/{id}")
     public ClientDto getClient(@PathVariable Long id) {
 
@@ -90,6 +95,7 @@ public class ClientController {
 //        return clientDtoFactory.makeClientDto(client);
 //    }
 
+    @Operation(summary = "Add client", description = "Create client")
     @PostMapping("/add")
     public ClientDto addClient(@RequestBody Client client) {
 
@@ -139,6 +145,7 @@ public class ClientController {
 //        return clientDtoFactory.makeClientDto(client);
 //    }
 
+    @Operation(summary = "Edit client", description = "Change client parameters")
     @PatchMapping("/edit/{client_id}")
     public ClientDto editClient(@PathVariable("client_id") Long id,
                                 @RequestBody Client client) {
@@ -157,6 +164,7 @@ public class ClientController {
         return clientDtoFactory.makeClientDto(client1);
     }
 
+    @Operation(summary = "Delete client", description = "Delete client")
     @DeleteMapping("/delete/{client_id}")
     public AnswerDto deleteClient(@PathVariable("client_id") Long id) {
 
@@ -200,6 +208,7 @@ public class ClientController {
         return clientDtoFactory.makeClientDto(saveClient);
     }
 
+    @Operation(summary = "Credit line", description = "Get client credits")
     @GetMapping("/{client_id}/credits")
     public List<CreditDto> getCreditLine(@PathVariable("client_id") Long id) {
 
@@ -212,6 +221,7 @@ public class ClientController {
                 .collect(Collectors.toList());
     }
 
+    @Operation(summary = "Add credit", description = "Add credit to client credit line")
     @PutMapping("/{client_id}/credit/{credit_id}")
     public ClientDto addCreditToClient(@PathVariable("client_id") Long client_id,
                                        @PathVariable("credit_id") Long credit_id

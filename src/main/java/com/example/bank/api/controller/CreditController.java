@@ -9,6 +9,8 @@ import com.example.bank.api.factories.CreditDtoFactory;
 import com.example.bank.entity.Client;
 import com.example.bank.entity.Credit;
 import com.example.bank.repository.CreditRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +25,14 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Transactional
 @RequestMapping("/api/credits")
+@Tag(name = "Credits", description = "Operations with credits")
 public class CreditController {
 
     private final CreditRepository creditRepository;
 
     private final CreditDtoFactory creditDtoFactory;
 
+    @Operation(summary = "All credits", description = "Get all credits")
     @GetMapping("/all")
     public List<CreditDto> getAllCredits() {
 
@@ -41,6 +45,7 @@ public class CreditController {
                         .collect(Collectors.toList());
     }
 
+    @Operation(summary = "Get credit", description = "Find credit by id")
     @GetMapping("/credit/{id}")
     public CreditDto getCreditById(@PathVariable Long id) {
 
@@ -49,6 +54,7 @@ public class CreditController {
         return creditDtoFactory.makeCreditDto(credit);
     }
 
+    @Operation(summary = "Add credit", description = "Create credit")
     @PostMapping("/add")
     public CreditDto addCredit(@RequestBody Credit credit) {
 
@@ -71,6 +77,7 @@ public class CreditController {
         return creditDtoFactory.makeCreditDto(credit1);
     }
 
+    @Operation(summary = "Edit credit", description = "Change credit parameters")
     @PatchMapping("/edit/{credit_id}")
     public CreditDto editCredit(@PathVariable("credit_id") Long id,
                                 @RequestBody Credit credit) {
@@ -86,6 +93,7 @@ public class CreditController {
         return creditDtoFactory.makeCreditDto(credit1);
     }
 
+    @Operation(summary = "Delete credit", description = "Delete credit")
     @DeleteMapping("/delete/{credit_id}")
     public AnswerDto deleteCredit(@PathVariable("credit_id") Long id) {
 
