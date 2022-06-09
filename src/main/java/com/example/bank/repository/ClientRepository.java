@@ -9,11 +9,5 @@ import java.util.stream.Stream;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    Client getClientById(Long id);
 
-    Optional<Client> findByName(String name);
-
-    Stream<Client> streamAllBy();
-
-    Stream<Client> streamAllByNameStartsWithIgnoreCase(String name);
 }

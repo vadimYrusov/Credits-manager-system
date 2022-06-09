@@ -39,20 +39,6 @@ public class ClientController {
 
     private final CreditDtoFactory creditDtoFactory;
 
-//    @GetMapping("/all")
-//    public List<ClientDto> fetchClients(@RequestParam(value = "prefix_name", required = false) Optional<String> optionalPrefixName) {
-//
-//        optionalPrefixName = optionalPrefixName.filter(prefixName -> prefixName.trim().isEmpty());
-//
-//        Stream<Client> clientStream = optionalPrefixName
-//                .map(clientRepository::streamAllByNameStartsWithIgnoreCase)
-//                .orElseGet(clientRepository::streamAllBy);
-//
-//        return clientStream
-//                .map(clientDtoFactory::makeClientDto)
-//                .collect(Collectors.toList());
-//    }
-
     @Operation(summary = "All clients", description = "Get all clients")
     @GetMapping("/all")
     public List<ClientDto> getAllClients() {
@@ -72,28 +58,6 @@ public class ClientController {
 
         return clientDtoFactory.makeClientDto(client);
     }
-
-//    @PostMapping("/add")
-//    public ClientDto addClient(@RequestParam String name) {
-//
-//        if (name.trim().isEmpty()) {
-//            throw new BadRequestException("Name can't be empty");
-//        }
-//
-//        clientRepository
-//                .findByName(name)
-//                .ifPresent(client -> {
-//                    throw new BadRequestException("Client " + name + " already exists");
-//                });
-//
-//        Client client = clientRepository.saveAndFlush(
-//                Client.builder()
-//                        .name(name)
-//                        .build()
-//        );
-//
-//        return clientDtoFactory.makeClientDto(client);
-//    }
 
     @Operation(summary = "Add client", description = "Create client")
     @PostMapping("/add")
@@ -120,30 +84,6 @@ public class ClientController {
 
         return clientDtoFactory.makeClientDto(client1);
     }
-
-//    @PatchMapping("/edit/{client_id}")
-//    public ClientDto editClient(@PathVariable("client_id") Long id,
-//                                @RequestParam String name) {
-//
-//        if (name.trim().isEmpty()) {
-//            throw new BadRequestException("Name can't be empty");
-//        }
-//
-//        Client client = getClientOrThrowException(id);
-//
-//        clientRepository
-//                .findByName(name)
-//                .filter(client1 -> !Objects.equals(client1.getId(), id))
-//                .ifPresent(client1 -> {
-//                    throw new BadRequestException("Client " + name + " already exists");
-//                });
-//
-//        client.setName(name);
-//
-//        client = clientRepository.saveAndFlush(client);
-//
-//        return clientDtoFactory.makeClientDto(client);
-//    }
 
     @Operation(summary = "Edit client", description = "Change client parameters")
     @PatchMapping("/edit/{client_id}")
@@ -173,39 +113,6 @@ public class ClientController {
         clientRepository.deleteById(id);
 
         return AnswerDto.makeDefault(true);
-    }
-
-    @PutMapping("/update")
-    public ClientDto updateClient(
-            @RequestParam(value = "client_id", required = false) Optional<Long> optionalId,
-            @RequestParam(value = "client_name", required = false) Optional<String> optionalName
-    ) {
-
-        optionalName = optionalName.filter(clientName -> !clientName.trim().isEmpty());
-
-        boolean isCreate = !optionalId.isPresent();
-
-        Client client = optionalId
-                .map(this::getClientOrThrowException)
-                .orElseGet(() -> Client.builder().build());
-
-        if (isCreate && !optionalName.isPresent()) {
-            throw new BadRequestException("Client name can't be empty");
-        }
-
-        optionalName
-                .ifPresent(clientName -> {
-                    clientRepository
-                            .findByName(clientName)
-                            .filter(client1 -> !Objects.equals(client1.getId(), client.getId()))
-                            .ifPresent(client1 -> {
-                                throw new BadRequestException("Client with name " + clientName + " already exists");
-                            });
-                });
-
-        final Client saveClient = clientRepository.saveAndFlush(client);
-
-        return clientDtoFactory.makeClientDto(saveClient);
     }
 
     @Operation(summary = "Credit line", description = "Get client credits")
