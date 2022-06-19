@@ -34,4 +34,11 @@ public class Client {
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private List<Credit> credits = new ArrayList<>();
 
+    public Client(Long id, String name, String surname, int age, String email) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+        this.email = email;
+    }
 }
